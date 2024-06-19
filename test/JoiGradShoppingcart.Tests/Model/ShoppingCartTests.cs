@@ -83,5 +83,97 @@ namespace JoiGradShoppingcart.Tests.Model
 
             Assert.Equal(6, order.LoyaltyPoints);
         }
+
+
+        [Fact]
+        public void should_calculate_price_for_20_percent_discount()
+        {
+            var shoppingCart = new ShoppingCart(new Customer("test"), new List<Product>
+            {
+                new Product(100, "DIS_20_ABCD", "T")
+            });
+
+            var order = shoppingCart.Checkout();
+
+            Assert.Equal(80.0, order.TotalPrice);
+        }
+
+        [Fact]
+        public void should_calculate_loyalty_for_20_percent_discount()
+        {
+            var shoppingCart = new ShoppingCart(new Customer("test"), new List<Product>
+            {
+                new Product(100, "DIS_20_ABCD", "T")
+            });
+
+            var order = shoppingCart.Checkout();
+
+            Assert.Equal(5, order.LoyaltyPoints);
+        }
+
+        [Fact]
+        public void should_discount_5_percent_for_price_over_500()
+        {
+            var shoppingCart = new ShoppingCart(new Customer("test"), new List<Product>
+            {
+                new Product(6000, "ABCD", "T")
+            });
+
+            var order = shoppingCart.Checkout();
+
+            Assert.Equal(5700, order.TotalPrice);
+        }
+
+        [Fact]
+        public void should_buy_2get1_free_get_1_promotion()
+        {
+            var products = new List<Product>
+            {
+                new Product(100, "BULK_BUY_2_GET_1_ABCD", "A"),
+                new Product(100, "BULK_BUY_2_GET_1_ABCD", "B"),
+                new Product(100, "BULK_BUY_2_GET_1_ABCD", "C"),
+                 new Product(100, "BULK_BUY_2_GET_1_BBBB", "D")
+            };
+            var shoppingCart = new ShoppingCart(new Customer("test"), products);
+
+            var order = shoppingCart.Checkout();
+
+            Assert.Equal(300, order.TotalPrice);
+        }
+
+        [Fact]
+        public void should_buy_2get1_free_no_promotion()
+        {
+            var products = new List<Product>
+            {
+                new Product(100, "BULK_BUY_2_GET_1_ABCD", "A"),
+                new Product(100, "BULK_BUY_2_GET_1_ABCD", "B"),
+                 new Product(100, "BULK_BUY_2_GET_1_BBBB", "C")
+            };
+            var shoppingCart = new ShoppingCart(new Customer("test"), products);
+
+            var order = shoppingCart.Checkout();
+
+            Assert.Equal(300, order.TotalPrice);
+        }
+
+        [Fact]
+        public void should_buy_2get1_free_get_2_promotion()
+        {
+            var products = new List<Product>
+            {
+                new Product(100, "BULK_BUY_2_GET_1_ABCD", "A"),
+                new Product(100, "BULK_BUY_2_GET_1_ABCD", "B"),
+                new Product(100, "BULK_BUY_2_GET_1_ABCD", "C"),
+                 new Product(100, "BULK_BUY_2_GET_1_BBBB", "D"),
+                 new Product(100, "BULK_BUY_2_GET_1_BBBB", "E"),
+                 new Product(100, "BULK_BUY_2_GET_1_BBBB", "F")
+            };
+            var shoppingCart = new ShoppingCart(new Customer("test"), products);
+
+            var order = shoppingCart.Checkout();
+
+            Assert.Equal(400, order.TotalPrice);
+        }
     }
 }
